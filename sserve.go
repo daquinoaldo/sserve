@@ -2,11 +2,11 @@ package main
 
 import (
 	"compress/gzip"
+	"flag"
 	"io"
 	"io/ioutil"
 	"log"
 	"net/http"
-	"os"
 	"regexp"
 	"strings"
 	"sync"
@@ -89,29 +89,57 @@ func redirectHTTP() {
 }
 
 // Serve a static content
-func serve(path string, port string) {
+func serve(path string, port string, minify bool, compression bool) {
 	// file server
 	fs := http.FileServer(http.Dir(path))
+
 	// minifier middleware
-	fsmin := getMinifier(fs)
+	if minify {
+		fs = getMinifier(fs)
+		log.Println("Code minified.")
+	}
+
 	// gzip middleware
-	fsmingzip := getGzipper(fsmin)
+	if compression {
+		log.Println("gzip compression activated.")
+		fs = getGzipper(fs)
+	}
+
 	// http handler
-	http.Handle("/", fsmingzip)
+	http.Handle("/", fs)
+
 	// start server
-	log.Println("Serving " + path + " on port " + port)
+	address := "https://localhost"
+	if port != "443" {
+		address = address + ":" + port
+	}
+	log.Println("Serving " + path + " on port " + port + ". Checkout at " + address + ".")
 	err := http.ListenAndServeTLS(":"+port, "localhost.crt", "localhost.key", nil)
 	log.Fatal(err)
 }
 
 // CLI interface
 func main() {
+	// parse CLI arguments
+	log.SetFlags(0)
+	var portFlag = flag.String("port", "443", "Port number of the server.")
+	var redirectFlag = flag.Bool("redirect", true, "If true activate the http redirect.")
+	var minifyFlag = flag.Bool("minify", true, "If true minify the code.")
+	var compressionFlag = flag.Bool("compression", true, "If true activate gzip compression.")
+	flag.Parse()
+
 	// read the static path from the cli args or use the working directory
 	path := "./"
-	if len(os.Args) > 1 {
-		path = os.Args[1]
+	if len(flag.Args()) > 0 {
+		path = flag.Args()[0]
 	}
+
+	// activate the redirect
+	if *redirectFlag {
+		redirectHTTP()
+		log.Println("http redirect activated.")
+	}
+
 	// start the server
-	serve(path, "443")
-	redirectHTTP()
+	serve(path, *portFlag, *minifyFlag, *compressionFlag)
 }
