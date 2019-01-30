@@ -7,7 +7,10 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
+	"os/exec"
 	"regexp"
+	"runtime"
 	"strings"
 	"sync"
 
@@ -21,6 +24,42 @@ import (
 )
 
 // AUXILIARY FUNCTIONS
+
+//mkcert
+func mkcert() {
+	// set the right executable according to the system
+	mkcert := "mkcert/"
+	switch runtime.GOOS {
+	case "darwin":
+		mkcert = mkcert + "mkcert-v1.2.0-darwin-amd64"
+	case "linux":
+		mkcert = mkcert + "mkcert-v1.2.0-linux-amd64"
+	case "windows":
+		mkcert = mkcert + "mkcert-v1.2.0-windows-amd64.exe"
+	default:
+		log.Fatal("Your system is not supported. Sorry.")
+		os.Exit(1)
+	}
+
+	// generate the certificate
+	if _, err := exec.Command(mkcert, "-install", "-cert-file", "localhost.crt",
+		"-key-file", "localhost.key", "localhost").Output(); err != nil {
+		log.Fatal(err.Error())
+		os.Exit(1)
+	}
+}
+
+// check if file exists
+func exist(path string) bool {
+	if _, err := os.Stat(path); err == nil {
+		return true
+	} else if os.IsNotExist(err) {
+		return false
+	} else {
+		os.Exit(1)
+		return false
+	}
+}
 
 // http to https rederect handler
 func redirect(w http.ResponseWriter, req *http.Request) {
@@ -132,6 +171,11 @@ func main() {
 	path := "./"
 	if len(flag.Args()) > 0 {
 		path = flag.Args()[0]
+	}
+
+	// ensure that the certificate files exists
+	if !exist("localhost.crt") || !exist("localhost.key") {
+		mkcert()
 	}
 
 	// activate the redirect

@@ -1,3 +1,6 @@
+github.com/DHowett/go-plist v0.0.0-20180609054337-500bd5b9081b/go.mod h1:5paT5ZDrOm8eAJPem2Bd+q3FTi3Gxm/U4tb2tH8YIUQ=
+github.com/FiloSottile/mkcert v1.2.0 h1:D+eyqEF/AL+t39YURNtb7NQWoSLUemjWaPunKDPr3Us=
+github.com/FiloSottile/mkcert v1.2.0/go.mod h1:uRTw3IhxFKhjXI/+VTMcjh8pmuUMweK6Nw6LFKUHHZQ=
 github.com/cheekybits/is v0.0.0-20150225183255-68e9c0620927/go.mod h1:h/aW8ynjgkuj+NQRlZcDbAbM1ORAbXjXX77sX7T289U=
 github.com/dustin/go-humanize v1.0.0/go.mod h1:HtrtbFcZ19U5GC7JDqmcUSB87Iq5E25KnS6fMYU6eOk=
 github.com/fsnotify/fsnotify v1.4.7/go.mod h1:jwhsz4b93w/PPRr/qN1Yymfu8t87LnFCMoQvtojpjFo=
@@ -7,5 +10,12 @@ github.com/tdewolff/minify/v2 v2.3.8 h1:Eyv23Tu+Rb5Q2vyxmvzUgtHetgneqAsaGv3950s1
 github.com/tdewolff/minify/v2 v2.3.8/go.mod h1:DD1stRlSx6JsHfl1+E/HVMQeXiec9rD1UQ0epklIZLc=
 github.com/tdewolff/parse/v2 v2.3.5 h1:/uS8JfhwVJsNkEh769GM5ENv6L9LOh2Z9uW3tCdlhs0=
 github.com/tdewolff/parse/v2 v2.3.5/go.mod h1:HansaqmN4I/U7L6/tUp0NcwT2tFO0F4EAWYGSDzkYNk=
+github.com/tdewolff/test v1.0.0 h1:jOwzqCXr5ePXEPGJaq2ivoR6HOCi+D5TPfpoyg8yvmU=
 github.com/tdewolff/test v1.0.0/go.mod h1:DiQUlutnqlEvdvhSn2LPGy4TFwRauAaYDsL+683RNX4=
+golang.org/x/net v0.0.0-20180627171509-e514e69ffb8b h1:oXs/nlnyk1ue6g+mFGEHIuIaQIT28IgumdSIRMq2aJY=
+golang.org/x/net v0.0.0-20180627171509-e514e69ffb8b/go.mod h1:mL1N/T3taQHkDXs73rZJwtUhF3w3ftmwwsq0BUmARs4=
 golang.org/x/sys v0.0.0-20181031143558-9b800f95dbbc/go.mod h1:STP8DvDyc/dI5b8T5hshtkjS+E42TnysNCUPdjciGhY=
+golang.org/x/text v0.3.0 h1:g61tztE5qeGQ89tm6NTjjM9VPIm088od1l6aSorWRWg=
+golang.org/x/text v0.3.0/go.mod h1:NqM8EUOU14njkJ3fqMW+pc6Ldnwhi/IjpwHt7yyuwOQ=
+software.sslmate.com/src/go-pkcs12 v0.0.0-20180114231543-2291e8f0f237 h1:iAEkCBPbRaflBgZ7o9gjVUuWuvWeV4sytFWg9o+Pj2k=
+software.sslmate.com/src/go-pkcs12 v0.0.0-20180114231543-2291e8f0f237/go.mod h1:/xvNRWUqm0+/ZMiF4EX00vrSCMsE4/NHb+Pt3freEeQ=
