@@ -15,7 +15,9 @@ When you install sserve it automatically creates and installs a local CA in the 
 No configuration is required, just lunch the tool and we take care of everything you need.
 
 ## Installation
-> **Warning**: the `rootCA-key.pem` file that mkcert automatically generates when installing sserve gives complete power to intercept secure requests from your machine. Do not share it.
+**Warning:** the `rootCA-key.pem` file that mkcert automatically generates when installing sserve gives complete power to intercept secure requests from your machine. Do not share it.
+
+**Requires Go:** follow [this instructions](https://golang.org/doc/install) to install it.
 
 ### MacOS
 ```
@@ -31,7 +33,6 @@ sudo yum install nss-tools
     -or-
 sudo pacman -S nss
 ```
-and Go (follow [this instructions](https://golang.org/doc/install)).
 
 Then install sserve
 ```
