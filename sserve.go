@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"regexp"
 	"runtime"
 	"strings"
@@ -23,30 +24,90 @@ import (
 	"github.com/tdewolff/minify/v2/xml"
 )
 
-// AUXILIARY FUNCTIONS
+// CERTIFICATES AUXILIARY FUNCTIONS
 
-//mkcert
+// efficiently download a file from url
+func downloadFile(url string, filepath string) {
+
+	// Create the file
+	out, err := os.Create(filepath)
+	if err != nil {
+		log.Fatal(err.Error())
+		os.Exit(1)
+	}
+	defer out.Close()
+
+	// Get the data
+	resp, err := http.Get(url)
+	if err != nil {
+		log.Fatal(err.Error())
+		os.Exit(1)
+	}
+	defer resp.Body.Close()
+
+	// Write the body to file
+	_, err = io.Copy(out, resp.Body)
+	if err != nil {
+		log.Fatal(err.Error())
+		os.Exit(1)
+	}
+}
+
+func getAppData() string {
+	dir := ""
+	switch {
+	case runtime.GOOS == "windows":
+		dir = os.Getenv("LocalAppData")
+		//return filepath.Join(dir, "sserve") + "\\"
+	case os.Getenv("XDG_DATA_HOME") != "":
+		dir = os.Getenv("XDG_DATA_HOME")
+	case runtime.GOOS == "darwin":
+		dir = os.Getenv("HOME")
+		if dir == "" {
+			return ""
+		}
+		dir = filepath.Join(dir, "Library", "Application Support")
+	default: // Linux/Unix
+		dir = os.Getenv("HOME")
+		if dir == "" {
+			return ""
+		}
+		dir = filepath.Join(dir, ".local", "share")
+	}
+	appData := filepath.Join(dir, "sserve")
+	os.MkdirAll(appData, os.ModePerm)
+	return appData + "/"
+}
+
+// mkcert to generates certificates
 func mkcert() {
 	// set the right executable according to the system
-	mkcert := "mkcert/"
+	exeURL := "https://github.com/FiloSottile/mkcert/releases/download/v1.2.0/"
+	file := ""
 	switch runtime.GOOS {
 	case "darwin":
-		mkcert = mkcert + "mkcert-v1.2.0-darwin-amd64"
+		file = "mkcert-v1.2.0-darwin-amd64"
 	case "linux":
-		mkcert = mkcert + "mkcert-v1.2.0-linux-amd64"
+		file = "mkcert-v1.2.0-linux-amd64"
 	case "windows":
-		mkcert = mkcert + "mkcert-v1.2.0-windows-amd64.exe"
+		file = "mkcert-v1.2.0-windows-amd64.exe"
 	default:
 		log.Fatal("Your system is not supported. Sorry.")
 		os.Exit(1)
 	}
 
+	// download the executable
+	appData := getAppData()
+	downloadFile(exeURL+file, appData+file)
+
 	// generate the certificate
-	if _, err := exec.Command(mkcert, "-install", "-cert-file", "localhost.crt",
-		"-key-file", "localhost.key", "localhost").Output(); err != nil {
+	if _, err := exec.Command(appData+file, "-install", "-cert-file", appData+"localhost.crt",
+		"-key-file", appData+"localhost.key", "localhost").Output(); err != nil {
 		log.Fatal(err.Error())
 		os.Exit(1)
 	}
+
+	log.Println("Generated certificates in " + appData + ".")
 }
 
 // check if file exists
@@ -60,6 +121,19 @@ func exist(path string) bool {
 		return false
 	}
 }
+
+func getCert() (string, string) {
+	appData := getAppData()
+	// ensure that the certificate files exists
+	if !exist(appData+"localhost.crt") || !exist(appData+"localhost.key") {
+		mkcert()
+	} else {
+		log.Println("Using certificates in " + appData + ".")
+	}
+	return appData + "localhost.crt", appData + "localhost.key"
+}
+
+// SERVER AUXILIARY FUNCTIONS
 
 // http to https rederect handler
 func redirect(w http.ResponseWriter, req *http.Request) {
@@ -129,6 +203,10 @@ func redirectHTTP() {
 
 // Serve a static content
 func serve(path string, port string, minify bool, compression bool) {
+
+	// certificates
+	crt, key := getCert()
+
 	// file server
 	fs := http.FileServer(http.Dir(path))
 
@@ -153,7 +231,7 @@ func serve(path string, port string, minify bool, compression bool) {
 		address = address + ":" + port
 	}
 	log.Println("Serving " + path + " on port " + port + ". Checkout at " + address + ".")
-	err := http.ListenAndServeTLS(":"+port, "localhost.crt", "localhost.key", nil)
+	err := http.ListenAndServeTLS(":"+port, crt, key, nil)
 	log.Fatal(err)
 }
 
@@ -171,11 +249,6 @@ func main() {
 	path := "./"
 	if len(flag.Args()) > 0 {
 		path = flag.Args()[0]
-	}
-
-	// ensure that the certificate files exists
-	if !exist("localhost.crt") || !exist("localhost.key") {
-		mkcert()
 	}
 
 	// activate the redirect
