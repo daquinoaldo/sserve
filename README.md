@@ -1,11 +1,17 @@
 # SServe
 _Static content on https connection trusted by localhost_
 
-### The idea
-sserve is a simple tool for serving static content on https thanks to locally-trusted development certificates.
-It requires no configuration.
+```
+$ sserve ~/myproj
+Serving ~/myproj on port 443. Checkout at https://localhost.
+```
+Easy. Handy. Free.
 
-### About
+### The idea
+sserve is a lightweight tool for serving static content on https thanks to locally-trusted development certificates.  
+It requires you no configuration.
+
+#### Why and how it works
 Serving static content on localhost in a trusted SSL connection is not so simple.  
 It requires to manually generate and trust certificates, with complicate commands and many manual steps.
 
@@ -14,9 +20,8 @@ sserve, serves static content using a locally-trusted certificate, generated wit
 When you install sserve it automatically creates and installs a local CA in the system (and browsers) root store, and generates the certificate for you.  
 No configuration is required, just lunch the tool and we take care of everything you need.
 
-## Installation
-**Warning:** the `rootCA-key.pem` file that mkcert automatically generates when installing sserve gives complete power to intercept secure requests from your machine. Do not share it.
 
+## Installation
 **Requires Go:** follow [this instructions](https://golang.org/doc/install) to install it.
 
 ### MacOS
@@ -63,3 +68,23 @@ Checkout the updated list [here](https://github.com/FiloSottile/mkcert/blob/mast
 - Firefox (macOS and Linux only)
 - Chrome and Chromium
 - Java (when `JAVA_HOME` is set)
+
+
+## Things to know
+
+### Warning
+The `rootCA-key.pem` file that mkcert automatically generates when installing sserve gives complete power to intercept secure requests from your machine. Do not share it.
+
+### License
+Is released under [AGPL-3.0 - GNU Affero General Public License v3.0](LICENSE).
+
+#### Briefly:
+- modification and redistribution allowed for both private and **commercial use**
+- you must **grant patent rigth to the owner and to all the contributors**
+- you must **keep it open source** and distribute under the **same license**
+- changes must be documented
+- include a limitation of liability and it **does not provide any warranty**
+
+### Warranty
+THIS TOOL IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND.
+THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU.
