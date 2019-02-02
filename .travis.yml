@@ -1,0 +1,19 @@
+language: go
+go: stable
+
+script:
+  - go vet
+  - GOOS=darwin GOARCH=amd64 go build -o "sserve-$(git describe --tags)-darwin-amd64"
+  - GOOS=linux GOARCH=amd64 go build -o "sserve-$(git describe --tags)-linux-amd64"
+  - GOOS=windows GOARCH=amd64 go build -o "sserve-$(git describe --tags)-windows-amd64.exe"
+
+deploy:
+  provider: releases
+  api_key:
+    secure: YcJzvs3JjOnepxUbZtIEhPP7b4xC+6DwzaXI81RsZe8JDSkroNA8a0NwxzBIin+WLTUZci+r/0/RvZX4Em3vl9n3zqbfTrnr8RRJvnEDhkL8ky6PeGstsmCsjqAln3MyxSpD5/ZsPrisefm+bZd90H6ZKIW2s34/MmEBpVsGoJhY/w8gCkb7TqRbAPXm1PmmfsVM9bv3VRGWnNeX+u440e59S6pS4diJB28R3cPffpCKffbDTWJJdignEhlHVj9+aEGQ5jv9A0/zdyqbo4Lz31ThSccYp69DqNq7ALADHpUWUpUPIp28ccOJNaaEQaKFM+eJz8AX1bKvOVWRtyJ1bspbJWlR+r9jfFoqTvMlpVCyM18fILy2WeImuzqkVJxgqKWmjDLnuB3ebFneblQ6x77RB4NfFHMNQUPCPvggf2+2bO8BgiuTUehl/pyr5FZ1YEEFtoTC1rlaX8ZNhgMtmTTaw/+7464Jp0Osw7aY9yLPhPlzexaONCyYBVLJlXmlbaEmEN1Pt34+J0FBJYUXPb07ajSkfUysn3AM+k3aJL5KioMqm+JLmp6+6ZE/YToC1hkIRX0u9DSBvJ80dZmvpHls7rfzGYdC6Xxac16JFoYiybCKABdm3b97qhRbtTfhCBgqIM4biOpSkCrKyJlWAIHEH+ncu5yW0uJYdE8cUwg=
+  skip_cleanup: true
+  file: sserve-*
+  file_glob: true
+  on:
+    repo: daquinoaldo/sserve
+  draft: true
