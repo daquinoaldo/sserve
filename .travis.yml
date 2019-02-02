@@ -17,4 +17,3 @@ deploy:
   on:
     repo: daquinoaldo/sserve
     tags: true
-  draft: true
