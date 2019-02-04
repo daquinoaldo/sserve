@@ -96,9 +96,16 @@ func mkcert() {
 		os.Exit(1)
 	}
 
-	// download the executable
+	// download mkcert binaries
 	appData := getAppData()
 	downloadFile(exeURL+file, appData+file)
+
+	// make binary executable
+	err := os.Chmod(appData+file, 0777)
+	if err != nil {
+		log.Fatal(err.Error())
+		os.Exit(1)
+	}
 
 	// generate the certificate
 	if _, err := exec.Command(appData+file, "-install", "-cert-file", appData+"localhost.crt",

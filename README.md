@@ -22,15 +22,35 @@ No configuration is required, just lunch the tool and we take care of everything
 
 
 ## Installation
-**Requires Go:** follow [this instructions](https://golang.org/doc/install) to install it.
 
-### MacOS
+### Using Go
 ```
 go get github.com/daquinoaldo/sserve
 ```
 
+### MacOS
+The following script automatically downloads the binary executable and adds it to PATH for you.
+```
+mkdir -p ${HOME}/.sserve && curl -L -o ${HOME}/.sserve/sserve $(
+  curl -s https://api.github.com/repos/daquinoaldo/sserve/releases/latest \
+  | grep "browser_download_url.*-darwin-amd64" \
+  | cut -d : -f 2,3 | tr -d \" \
+) && chmod +x ${HOME}/.sserve/sserve \
+&& echo "export PATH=${HOME}/.sserve:\${PATH}" >> ${HOME}/.bash_profile
+```
+
 ### Linux
-First install `certutil`
+The following script automatically downloads the binary executable and adds it to PATH for you.
+```
+mkdir -p ${HOME}/.sserve && curl -L -o ${HOME}/.sserve/sserve $(
+  curl -s https://api.github.com/repos/daquinoaldo/sserve/releases/latest \
+  | grep "browser_download_url.*-linux-amd64" \
+  | cut -d : -f 2,3 | tr -d \" \
+) && chmod +x ${HOME}/.sserve/sserve \
+&& echo "export PATH=${HOME}/.sserve:\${PATH}" >> ${HOME}/.bash_profile
+```
+
+**Important:** you may need to install `certutil` to make it work.
 ```
 sudo apt install libnss3-tools
     -or-
@@ -39,20 +59,15 @@ sudo yum install nss-tools
 sudo pacman -S nss
 ```
 
-Then install sserve
-```
-go get github.com/daquinoaldo/sserve
-```
-
 ### Windows
-```
-go get github.com/daquinoaldo/sserve
-```
+**Download** the windows executable from the [latest release](https://github.com/daquinoaldo/sserve/releases/latest) (is the one that ends with `-windows-amd64.exe`) and put it wherever you want. **Just drop the folder you want to serve over the executable**.
+
 
 ## Troubleshooting
 If you're running into permission problems try running `sserve` as an Administrator.
 
 For example, on some operating system is not possible to use the 443 port without sudo permissions.
+
 
 ## Supported root stores
 _The supported root stores are the one supported by mkcert.  
@@ -69,6 +84,26 @@ Checkout the updated list [here](https://github.com/FiloSottile/mkcert/blob/mast
 - Chrome and Chromium
 - Java (when `JAVA_HOME` is set)
 
+
+## Uninstall
+
+### Go
+```
+go clean -i github.com/daquinoaldo/sserve
+```
+If there are any sources in `$GOPATH/src/github.com/daquinoaldo/sserve` remove them.
+
+### MacOS and Linux
+```
+rm -rf ${HOME}/.sserve
+```
+Then edit `~/.bash_profile` and remove the following row.
+```
+export PATH=${HOME}/.sserve:\${PATH}
+```
+
+### Windows
+Just delete the downloaded file.
 
 ## Things to know
 
@@ -88,3 +123,4 @@ Is released under [AGPL-3.0 - GNU Affero General Public License v3.0](LICENSE).
 ### Warranty
 THIS TOOL IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND.
 THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU.
+For the full warranty check the [LICENSE](LICENSE).
