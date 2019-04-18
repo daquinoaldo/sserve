@@ -101,7 +101,7 @@ func mkcert() {
 	downloadFile(exeURL+file, appData+file)
 
 	// make binary executable
-	err := os.Chmod(appData+file, 0777)
+	err := os.Chmod(appData+file, 0755)
 	if err != nil {
 		log.Fatal(err.Error())
 		os.Exit(1)

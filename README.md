@@ -22,6 +22,7 @@ No configuration is required, just lunch the tool and we take care of everything
 
 
 ## Installation
+[![Build Status](https://travis-ci.org/daquinoaldo/sserve.svg?branch=master)](https://travis-ci.org/daquinoaldo/sserve)
 
 ### Using Go
 ```
@@ -37,6 +38,11 @@ mkdir -p ${HOME}/.sserve && curl -L -o ${HOME}/.sserve/sserve $(
   | cut -d : -f 2,3 | tr -d \" \
 ) && chmod +x ${HOME}/.sserve/sserve \
 && echo "export PATH=${HOME}/.sserve:\${PATH}" >> ${HOME}/.bash_profile
+```
+
+**Important:** you may need to install `certutil` to make it work.
+```
+brew install nss
 ```
 
 ### Linux
