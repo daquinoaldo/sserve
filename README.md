@@ -1,3 +1,9 @@
+## ⚠️ Deprecated
+
+Use [https-localhost](https://github.com/daquinoaldo/https-localhost/) instead.
+
+---
+
 # SServe
 _Static content on https connection trusted by localhost_
 
